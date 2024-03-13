@@ -16,7 +16,7 @@ const getFlightsFilters = async (req, res) => {
         res.json({ status: 'OK', flights: allFlights });
     } catch (error) {
         console.error('Error al obtener los vuelos:', error);
-        res.status(500).send({ status: "Error", message: "Error al obtener los vuelos" });
+        res.status(500).send({ status: "Error", message: error.message });
     }
 };
 
