@@ -4,7 +4,7 @@ const flightsController = require('../../controllers/flightsController')
 
 router
     .get("/", flightsController.getAllFlights)
-    // .get("/filters", flightsController.getFlightsFilters)
+    .get("/filters", flightsController.getFlightsFilters)
     .post("/", flightsController.createFlights);
 
 module.exports = router;
