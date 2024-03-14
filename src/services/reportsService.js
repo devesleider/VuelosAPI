@@ -2,6 +2,11 @@ const model = require('../models/reservation');
 const modelFlights = require('../models/flights');
 const modelAirline =  require('../models/airline');
 
+
+/**
+ * Función para obtener las aerolineas con mas reservas.
+ * @returns {Object} Objeto JSON con la información las aerolineas.
+ */
 const getTopReservations= async () => {
     const reservations = await model.find();
 
@@ -10,7 +15,6 @@ const getTopReservations= async () => {
         return { ...reservation._doc, flight };
       }));
 
-    // Contar las reservas por aerolínea
     const airlineReservationsCount = {};
     reservationWithflightDetails.forEach(reservation => {
       if (!airlineReservationsCount[reservation.flight.idAirline]) {
@@ -20,24 +24,24 @@ const getTopReservations= async () => {
       }
     });
 
-    // Convertir el objeto en un array de pares [idAirline, count]
     const airlineReservationsCountArray = Object.entries(airlineReservationsCount);
 
-    // Ordenar el array por el número de reservas (en orden descendente)
     airlineReservationsCountArray.sort((a, b) => b[1] - a[1]);
 
-    // Obtener los detalles de las aerolíneas con más reservas
     const airlinesWithMostReservations = await Promise.all(airlineReservationsCountArray.map(async ([idAirline, count]) => {
       const airline = await modelAirline.findById(idAirline);
       return { airline, reservationCount: count };
     }));
 
-     // Devolver solo los 5 primeros resultados
      const top5AirlinesWithMostReservations = airlinesWithMostReservations.slice(0, 5);
 
      return top5AirlinesWithMostReservations;
 };
 
+/**
+ * Función para obtener para obtener número de aerolineas.
+ * @returns {Object} Objeto JSON con el número de aerolineas.
+ */
 const getCountAirline= async () => {
     const countAirline = await modelAirline.find().count();
     return countAirline;
